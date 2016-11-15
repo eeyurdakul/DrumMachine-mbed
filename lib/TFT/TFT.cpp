@@ -34,7 +34,7 @@ TFT::~TFT() {}
 
 // private methods
 
-void TFT::writeCommand(TFT_Command command) {
+void TFT::writeCommand(uint8_t command) {
   rs.writeLow();
   dataBus.write(command);
   wr.writeLow();
