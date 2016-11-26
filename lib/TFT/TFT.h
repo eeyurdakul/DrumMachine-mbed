@@ -7,7 +7,10 @@
 #include "Font_S.h"
 #include "Font_M.h"
 #include "Font_L.h"
-                                                    //      type      parameter
+
+/* ILI9481 Commands ----------------------------------------------------------*/
+
+                                                    //      Type      Parameter
 #define  TFT_NOP                          0x00      //      C         0
 #define  TFT_SOFT_RESET                   0x01      //      C         0
 #define  TFT_GET_RED_CHANNEL              0x06      //      R         1

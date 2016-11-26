@@ -15,3 +15,13 @@ void swap(T &a, T &b) {
   a = b;
   b = temp;
 }
+
+/*
+void printLine() {
+  printf("\n");
+}
+
+void printDash() {
+  printf("------------------------\n");
+}
+*/

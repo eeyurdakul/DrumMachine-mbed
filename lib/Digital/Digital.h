@@ -28,6 +28,8 @@ typedef enum {
   DIG_PULL_DOWN    = 0x02         // Pull-down
 } Digital_Pull;
 
+/* Digital -------------------------------------------------------------------*/
+
 class Digital {
 protected:
   GPIO_TypeDef* port;
@@ -40,6 +42,7 @@ public:
   void setPull(Digital_Pull pull);
 };
 
+/* Digital_Out ---------------------------------------------------------------*/
 
 class Digital_Out: public Digital {
 public:
@@ -49,6 +52,8 @@ public:
   void writeHigh();
   void writeLow();
 };
+
+/* Digital_In ----------------------------------------------------------------*/
 
 class Digital_In: public Digital {
 public:

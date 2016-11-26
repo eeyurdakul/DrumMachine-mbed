@@ -32,7 +32,7 @@ TFT::TFT(PortName dataPort, PinName rsPin, PinName wrPin, PinName csPin, PinName
 
 TFT::~TFT() {}
 
-// private methods
+/* Private functions ---------------------------------------------------------*/
 
 void TFT::writeCommand(uint8_t command) {
   rs.writeLow();
@@ -300,7 +300,7 @@ uint8_t TFT::getLetter(char letter) {
   }
 }
 
-// public methods
+/* Public functions ----------------------------------------------------------*/
 
 uint16_t TFT::getWidth() const {
   return width;

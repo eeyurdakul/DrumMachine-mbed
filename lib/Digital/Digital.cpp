@@ -1,6 +1,6 @@
 #include "Digital.h"
 
-// Digital methods
+/* Digital functions ---------------------------------------------------------*/
 
 GPIO_TypeDef* Digital::getPort(PinName pinName) {
   switch (pinName / 16) {
@@ -50,7 +50,7 @@ void Digital::setPull(Digital_Pull pull) {
   port->PUPDR |= pull << (pin * 2);
 }
 
-// Digital_Out methods
+/* Digital_Out functions -----------------------------------------------------*/
 
 Digital_Out::Digital_Out(PinName pinName) {
   DigitalOut dPin(pinName);
@@ -75,7 +75,7 @@ void Digital_Out::writeLow() {
   port->BSRR = (1 << (pin + 16));
 }
 
-// Digital_In methods
+/* Digital_In functions ------------------------------------------------------*/
 
 Digital_In::Digital_In(PinName pinName) {
   DigitalIn dPin(pinName);

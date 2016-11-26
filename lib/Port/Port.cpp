@@ -1,6 +1,6 @@
 #include "Port.h"
 
-// Port methods
+/* Port functions ------------------------------------------------------------*/
 
 GPIO_TypeDef* Port::getPort(PortName portName) {
   switch (portName) {
@@ -46,7 +46,7 @@ void Port::setPull(Port_Pull pull) {
   port->PUPDR = pull;
 }
 
-// Port_Out methods
+/* Port_Out functions --------------------------------------------------------*/
 
 Port_Out::Port_Out(PortName portName) {
   PortOut dPort(portName);
@@ -65,7 +65,7 @@ void Port_Out::write(uint16_t value) {
   port->ODR = value;
 }
 
-// Port_In methods
+/* Port_In functions ---------------------------------------------------------*/
 
 Port_In::Port_In(PortName portName) {
   PortIn dPort(portName);
