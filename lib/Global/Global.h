@@ -2,7 +2,7 @@
 
 #include "mbed.h"
 
-// Global Functions
+/* Global Functions ----------------------------------------------------------*/
 
 template <typename T, int N>
 int size(T (&a) [N]) {
@@ -16,12 +16,7 @@ void swap(T &a, T &b) {
   b = temp;
 }
 
-/*
-void printLine() {
-  printf("\n");
-}
+/* Global Constants ----------------------------------------------------------*/
 
-void printDash() {
-  printf("------------------------\n");
-}
-*/
+const char strDash[] = "------------------------\n";
+const char strLine[] = "\n";

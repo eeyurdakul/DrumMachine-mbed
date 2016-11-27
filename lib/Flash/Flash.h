@@ -5,7 +5,8 @@
 #include "Digital.h"
 #include "Port.h"
 
-/* IS25LP128 ------------------------------------------------------------------------------------------------*/
+/* IS25LP128 Commands -------------------------------------------------------------------------------------*/
+
                                                  //   Byte1       Byte2       Byte3       Byte4       Byte5
 #define   FLASH_NORMAL_READ               0x03   //   A[23:16]    A[15:8]     A[7:0]      DataOut     DataOut
 #define   FLASH_FAST_READ                 0x0B   //   A[23:16]    A[15:8]     A[7:0]      Dummy       DataOut
@@ -34,7 +35,7 @@
 const uint16_t kFlashErase4KBTime   = 300;      // ms
 const uint16_t kFlashErase32KBTime  = 750;      // ms
 const uint16_t kFlashErase64KBTime  = 1500;     // ms
-const uint32_t kFlashEraseChipTime  = 90000;    // ms
+const uint16_t kFlashEraseChipTime  = 90;       // sec
 const uint16_t kWriteRegisterTime   = 15;       // ms
 const uint16_t kPageProgramTime     = 1;        // ms
 
@@ -46,9 +47,6 @@ const uint16_t kPageWordSize        = 128;
 const uint32_t kFlashCapacity       = 16L * 1024L * 1024L;
 const uint32_t kFlashMaxPage        = 65535;
 const uint32_t kFlashFrequency      = 90000000;
-
-const char strDash[] = "------------------------\n";
-const char strLine[] = "\n";
 
 typedef enum {
   FLASH_OK            = 0x00,

@@ -214,7 +214,7 @@ void Flash::writeBytePage(uint32_t page, const uint8_t* data) {
       flash.write(data[i]);
     }
     cs.writeHigh();
-    wait_us(kPageProgramTime);
+    wait_ms(kPageProgramTime);
   }
 }
 
@@ -236,7 +236,7 @@ void Flash::writeWordPage(uint32_t page, const uint16_t* data) {
       flash.write(data02);
     }
     cs.writeHigh();
-    wait_us(kPageProgramTime);
+    wait_ms(kPageProgramTime);
   }
 }
 
@@ -362,7 +362,7 @@ void Flash::writeWordArray(uint32_t startPage, const uint16_t* data, uint32_t ar
     uint16_t pageData[128];
     uint8_t offset = 0;
     bool writeFlag = false;
-    for(uint32_t j = 0; j < arraySize; j++) {
+    for (uint32_t j = 0; j < arraySize; j++) {
       // read case
       if ((j < pageDataLimit) && (offset < kPageWordSize)) {
         pageData[offset] = data[j];
@@ -376,7 +376,7 @@ void Flash::writeWordArray(uint32_t startPage, const uint16_t* data, uint32_t ar
       if (j == arraySize - 1) {
         writeWordPage(page, pageData);
         writeFlag = false;
-        status = 1;
+        status = FLASH_OK;
       }
       // write case
       if (writeFlag) {
@@ -444,13 +444,13 @@ void Flash::checkByteArray(uint32_t startPage, const uint8_t* data, uint32_t arr
     status = FLASH_ERROR_MAXPAGE;
   }
   // list header
-  mac.printf("checkByteArray");
+  mac.printf("checkByteArray\n");
   mac.printf(strDash);
   // list report
   printStatus(status);
-  mac.printf("startPage   ---> %lu", startPage);
-  mac.printf("endPage     ---> %lu", endPage);
-  mac.printf("errorCount  ---> %lu", error);
+  mac.printf("startPage   ---> %lu\n", startPage);
+  mac.printf("endPage     ---> %lu\n", endPage);
+  mac.printf("errorCount  ---> %lu\n", error);
   mac.printf(strLine);
 }
 
@@ -492,13 +492,13 @@ void Flash::checkWordArray(uint32_t startPage, const uint16_t* data, uint32_t ar
     status = FLASH_ERROR_MAXPAGE;
   }
   // list header
-  mac.printf("checkWordArray");
+  mac.printf("checkWordArray\n");
   mac.printf(strDash);
   // list report
   printStatus(status);
-  mac.printf("startPage   ---> %lu", startPage);
-  mac.printf("endPage     ---> %lu", endPage);
-  mac.printf("errorCount  ---> %lu", error);
+  mac.printf("startPage   ---> %lu\n", startPage);
+  mac.printf("endPage     ---> %lu\n", endPage);
+  mac.printf("errorCount  ---> %lu\n", error);
   mac.printf(strLine);
 }
 
@@ -601,10 +601,11 @@ void Flash::erase64KB(uint32_t page) {
 void Flash::eraseChip() {
   uint8_t status = FLASH_ERROR_WRITE;
   // erase chip
+  writeEnable();
   cs.writeLow();
   flash.write(FLASH_CHIP_ERASE);
   cs.writeHigh();
-  wait_ms(kFlashEraseChipTime);
+  wait(kFlashEraseChipTime);
   status = FLASH_OK;
   // list header
   mac.printf("eraseChip\n");
