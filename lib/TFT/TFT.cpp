@@ -1,10 +1,10 @@
 #include "TFT.h"
 
-TFT::TFT(PortName dataPort, PinName rsPin, PinName wrPin, PinName csPin, PinName rstPin, TFT_Rotation rotation_)
+TFT::TFT(PortName dataPort, PinName csPin, PinName rsPin, PinName wrPin, PinName rstPin, TFT_Rotation rotation_)
 : dataBus(dataPort, PORT_SPEED_100MHz)
+, cs(csPin, DIG_SPEED_100MHz)
 , rs(rsPin, DIG_SPEED_100MHz)
 , wr(wrPin, DIG_SPEED_100MHz)
-, cs(csPin, DIG_SPEED_100MHz)
 , rst(rstPin, DIG_SPEED_100MHz)
 , foreColor(WHITE)
 , backColor(BLACK)
@@ -332,22 +332,22 @@ void TFT::setRotation(TFT_Rotation rotation_) {
   writeCommand(TFT_SET_ADDRESS_MODE);
   switch (rotation) {
     case PORTRAIT_0:
-    writeData(0x0A);
+    writeData(0x48);
     width  = kTFT_WIDTH;
     height = kTFT_HEIGHT;
     break;
     case LANDSCAPE_0:
-    writeData(0x28);
+    writeData(0x29);
     width  = kTFT_HEIGHT;
     height = kTFT_WIDTH;
     break;
     case PORTRAIT_1:
-    writeData(0x09);
+    writeData(0x99);
     width  = kTFT_WIDTH;
     height = kTFT_HEIGHT;
     break;
     case LANDSCAPE_1:
-    writeData(0x2B);
+    writeData(0xF8);
     width  = kTFT_HEIGHT;
     height = kTFT_WIDTH;
     break;
@@ -398,79 +398,103 @@ uint16_t TFT::getSpacing() const {
 void TFT::initialize() {
   // reset TFT
   rst.writeLow();
-  wait_ms(50);
+  wait_ms(20);
   rst.writeLow();
-  wait_ms(150);
+  wait_ms(60);
   rst.writeHigh();
-  wait_ms(150);
+  wait_ms(120);
   dataBus.write(0x00);
   wr.writeHigh();
   cs.writeLow();
   // initialize TFT
-  writeCommand(TFT_EXIT_SLEEP_MODE);
-  wait_ms(20);
-  writeCommand(TFT_POWER_SETTING);
-  writeData(0x07);
-  writeData(0x42);
-  writeData(0x18);
-  writeCommand(TFT_VCOM_CONTROL);
+  writeCommand(TFT_SOFT_RESET);
   writeData(0x00);
-  writeData(0x07);
-  writeData(0x10);
-  writeCommand(TFT_POWER_SETTING_NORMAL);
-  writeData(0x01);
-  writeData(0x02);
-  writeCommand(TFT_PANEL_DRIVING_SETTING);
-  writeData(0x10);
-  writeData(0x3B);
+  wait_ms(50);
+
+  writeCommand(TFT_SET_DISPLAY_OFF);
   writeData(0x00);
-  writeData(0x02);
-  writeData(0x11);
-  writeCommand(TFT_FRAME_RATE);
-  writeData(0x03);
-  writeCommand(TFT_GAMMA_SETTING);
+
+  writeCommand(TFT_SET_POWER_CTRL_1);
+  writeData(0x0D);
+  writeData(0x0D);
+
+  writeCommand(TFT_SET_POWER_CTRL_2);
+  writeData(0x43);
   writeData(0x00);
+
+  writeCommand(TFT_SET_POWER_CTRL_3);
+  writeData(0x00);
+
+  writeCommand(TFT_SET_VCOM_CTRL_1);
+  writeData(0x00);
+  writeData(0x48);
+
+  // writeCommand(TFT_SET_DISPLAY_FUNCTION_CTRL);
+  // writeData(0x02);
+  // writeData(0x22);      // 0x42 = Rotate display 180 degrees
+  // writeData(0x3B);
+
+  writeCommand(TFT_SET_POSITIVE_GAMMA_CTRL);
+  writeData(0x0F);
+  writeData(0x24);
+  writeData(0x1C);
+  writeData(0x0A);
+  writeData(0x0F);
+  writeData(0x08);
+  writeData(0x43);
+  writeData(0x88);
   writeData(0x32);
-  writeData(0x36);
-  writeData(0x45);
+  writeData(0x0F);
+  writeData(0x10);
   writeData(0x06);
-  writeData(0x16);
-  writeData(0x37);
-  writeData(0x75);
-  writeData(0x77);
-  writeData(0x54);
-  writeData(0x0C);
+  writeData(0x0F);
+  writeData(0x07);
   writeData(0x00);
+
+  writeCommand(TFT_SET_NEGATIVE_GAMMA_CTRL);
+  writeData(0x0F);
+  writeData(0x38);
+  writeData(0x30);
+  writeData(0x09);
+  writeData(0x0F);
+  writeData(0x0F);
+  writeData(0x4e);
+  writeData(0x77);
+  writeData(0x3C);
+  writeData(0x07);
+  writeData(0x10);
+  writeData(0x05);
+  writeData(0x23);
+  writeData(0x1B);
+  writeData(0x00);
+
+  writeCommand(TFT_EXIT_INVERT_MODE);
+
   writeCommand(TFT_SET_ADDRESS_MODE);
   switch (rotation) {
     case 0:
-    writeData(0x0A);
+    writeData(0x48);
     break;
     case 1:
-    writeData(0x28);
+    writeData(0x29);
     break;
     case 2:
-    writeData(0x09);
+    writeData(0x99);
     break;
     case 3:
-    writeData(0x2B);
+    writeData(0xF8);
     break;
   }
+
   writeCommand(TFT_SET_PIXEL_FORMAT);
   writeData(0x55);
-  writeCommand(TFT_SET_COLUMN_ADDRESS);
-  writeData(0x00);
-  writeData(0x00);
-  writeData(0x01);
-  writeData(0x3F);
-  writeCommand(TFT_SET_PAGE_ADDRESS);
-  writeData(0x00);
-  writeData(0x00);
-  writeData(0x01);
-  writeData(0xE0);
+
+  writeCommand(TFT_ENTER_NORMAL_MODE);
+
+  writeCommand(TFT_EXIT_SLEEP_MODE);
   wait_ms(120);
+
   writeCommand(TFT_SET_DISPLAY_ON);
-  writeCommand(TFT_WRITE_MEMORY_START);
 }
 
 void TFT::clearScreen() {
